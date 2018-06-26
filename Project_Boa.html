@@ -1,0 +1,76 @@
+<canvas id="gc" width="400" height="400"></canvas>
+<script>
+window.onload=function() {
+	canv=document.getElementById("gc");
+	ctx=canv.getContext("2d");
+	document.addEventListener("keydown",keyPush);
+	my_var=setInterval(game,1000/5);			//Block per 1000/5 second is speed of the snake
+}
+px=py=9;				//initial coordinate of the snake
+gs=tc=20;				//dimension of the Canvas(Feild/Playground)
+ax=ay=19;				//initial cordinate of the target(mouse)
+xv=yv=0;
+trail=[];
+points=0;
+tail = 5;
+function game() {
+	px+=xv;				
+	py+=yv;
+	if(px<0) {
+		px= tc-1;		//boundry controller
+	}
+	if(px>tc-1) {
+		px= 0;			//boundry controller
+	}
+	if(py<0) {
+		py= tc-1;		//boundry controller
+	}
+	if(py>tc-1) {
+		py= 0;			//boundry controller
+	}
+	ctx.fillStyle="green";											//Background Color
+	ctx.fillRect(0,0,canv.width,canv.height);
+
+	ctx.fillStyle="orange";											//snake color
+	for(var i=0;i<trail.length;i++) {								//iteration requied to check for game over condition on each session
+		ctx.fillRect(trail[i].x*gs,trail[i].y*gs,gs-2,gs-2);
+		if(trail[i].x==px && trail[i].y==py && tail!=5) {			//game over scenario/condition (snake biting itself i.e head of the snake overlap on any index of its trail)
+			clearInterval(my_var);									//To stop the session
+			document.write("Your Score is: ",points);				//Display your Score
+			tail = 5;
+			break;
+		}
+	}
+	trail.push({x:px,y:py});
+	while(trail.length>tail) {
+	trail.shift();
+	}
+
+	if(ax==px && ay==py) {											//Randomly generating Target(Mouse) after consumption by the snake 
+		points++;
+		tail++;
+		ax=Math.floor(Math.random()*tc);							//Random generation of the coordinate of the target
+		ay=Math.floor(Math.random()*tc);							//Random generation of the coordinate of the target
+	}
+	ctx.fillStyle="red";											//Target color
+	ctx.fillRect(ax*gs,ay*gs,gs-2,gs-2);
+}
+
+//Controll section of the snake
+function keyPush(evt) {
+	switch(evt.keyCode) {
+		case 37:
+			xv=-1;yv=0;
+			break;
+		case 38:
+			xv=0;yv=-1;
+			break;
+		case 39:
+			xv=1;yv=0;
+			break;
+		case 40:
+			xv=0;yv=1;
+			break;
+	}
+}
+</script>
