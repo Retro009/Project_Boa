@@ -1,2 +1,2 @@
 # Project_Boa
-simple javascript programme
+simple javascript programme for Snake Game
